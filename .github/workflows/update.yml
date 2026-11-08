@@ -70,7 +70,9 @@ jobs:
           git add bucket/flisk.json
           git commit -m "candidate" --allow-empty
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          scoop bucket add flisk "$env:GITHUB_WORKSPACE"
+          git config --global --add safe.directory '*'
+          # Scoop only accepts a Git URL, not a plain path.
+          scoop bucket add flisk "file:///$($env:GITHUB_WORKSPACE -replace '\\', '/')"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Install
         run: |
