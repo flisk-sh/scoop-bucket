@@ -1,17 +1,17 @@
 {
-  "version": "1.4.60",
+  "version": "1.4.61",
   "description": "Run your whole app locally with one command",
   "homepage": "https://flisk.sh",
   "license": "MIT",
   "architecture": {
     "64bit": {
       "url": [
-        "https://github.com/flisk-sh/releases/releases/download/v1.4.60/flisk-windows-amd64.exe#/flisk.exe",
-        "https://github.com/flisk-sh/releases/releases/download/v1.4.60/flisk-cli-engine.tar.gz"
+        "https://github.com/flisk-sh/releases/releases/download/v1.4.61/flisk-windows-amd64.exe#/flisk.exe",
+        "https://github.com/flisk-sh/releases/releases/download/v1.4.61/flisk-cli-engine.tar.gz"
       ],
       "hash": [
-        "9e23d1ceadc97c1ee110de315cee2d306b18fb6a85ed041ee312607efa1667ce",
-        "47f165b5867e6a8eceaf14c4aba442e74f82cfcd69f4176ff38d53157b2bd037"
+        "6d4559ec2379274c14c470b0454a01c959abc935366a54e3e843687edad7fc51",
+        "cb9d9efc07a978a383b3483b2c0c9d96ec1574cbd73c981c7cad085498d7a84b"
       ]
     }
   },
