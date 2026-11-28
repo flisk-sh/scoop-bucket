@@ -10,8 +10,10 @@ const script = fileURLToPath(new URL('./update-manifest.sh', import.meta.url));
 const oldManifest = '{"version":"1.2.2"}\n';
 const exeHash = 'a'.repeat(64);
 const engineHash = 'b'.repeat(64);
+const defaultChecksums = `${exeHash}  flisk-windows-amd64.exe
+${engineHash}  flisk-cli-engine.tar.gz`;
 
-function update(t, jqFails) {
+function update(t, jqFails, checksums = defaultChecksums) {
   const root = mkdtempSync(join(tmpdir(), 'scoop-update-test-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const bin = join(root, 'bin');
@@ -21,7 +23,9 @@ function update(t, jqFails) {
   writeFileSync(manifest, oldManifest);
   writeFileSync(join(bin, 'curl'), `#!/bin/sh
 [ "$2" = "https://github.com/flisk-sh/releases/releases/download/v1.2.3/checksums.txt" ] || exit 1
-printf '%s\\n' '${exeHash}  flisk-windows-amd64.exe' '${engineHash}  flisk-cli-engine.tar.gz'
+cat <<'EOF'
+${checksums}
+EOF
 `, { mode: 0o755 });
   if (jqFails) {
     writeFileSync(join(bin, 'jq'), '#!/bin/sh\nprintf "{\\"version\\":"\nexit 2\n', { mode: 0o755 });
@@ -53,4 +57,13 @@ test('writes the new version, URLs and hashes after jq succeeds', (t) => {
     url: [`${base}/flisk-windows-amd64.exe#/flisk.exe`, `${base}/flisk-cli-engine.tar.gz`],
     hash: [exeHash, engineHash],
   });
+});
+
+test('accepts binary-mode checksum filenames', (t) => {
+  const checksums = `${exeHash} *flisk-windows-amd64.exe
+${engineHash} *flisk-cli-engine.tar.gz`;
+  const { contents, result } = update(t, false, checksums);
+  assert.equal(result.status, 0, result.stderr);
+  const manifest = JSON.parse(contents);
+  assert.deepEqual(manifest.architecture['64bit'].hash, [exeHash, engineHash]);
 });

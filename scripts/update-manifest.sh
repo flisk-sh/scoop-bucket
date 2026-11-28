@@ -18,7 +18,7 @@ checksums="$(curl -fsSL "$releases/download/$tag/checksums.txt")"
 
 sha() {
   local value
-  value="$(awk -v name="$1" '$2 == name { print $1 }' <<<"$checksums")"
+  value="$(awk -v name="$1" '{ file=$2; sub(/^\*/, "", file) } file == name { print $1 }' <<<"$checksums")"
   [[ "$value" =~ ^[0-9a-f]{64}$ ]] || { echo "no checksum for $1 in $tag" >&2; exit 1; }
   echo "$value"
 }
